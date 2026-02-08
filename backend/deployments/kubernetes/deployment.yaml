@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shopping-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shopping-backend
+  template:
+    metadata:
+      labels:
+        app: shopping-backend
+    spec:
+      containers:
+        - name: shopping-backend
+          image: shopping-backend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
