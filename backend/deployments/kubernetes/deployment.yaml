@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shopping-backend
+  labels:
+    app: shopping-backend
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: shopping-backend
+  template:
+    metadata:
+      labels:
+        app: shopping-backend
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: shopping-backend
+          image: shopping-backend:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: GIN_MODE
+              value: release
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
