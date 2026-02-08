@@ -1,16 +1,25 @@
-# React + Vite
+# frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+商品管理系统前端，基于 React + Vite 实现。
 
-Currently, two official plugins are available:
+## 启动方式
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+npm install
+npm run dev
+```
 
-## React Compiler
+默认开发端口为 `5173`，并通过 Vite 代理将 `/api` 请求转发至 `http://localhost:8080`。
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 可选环境变量
 
-## Expanding the ESLint configuration
+- `VITE_API_BASE_URL`：后端基础地址，默认为空字符串。
+  - 例如：`VITE_API_BASE_URL=http://localhost:8080`
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 页面功能
+
+- 商品列表展示
+- 新增商品
+- 编辑商品
+- 删除商品
+- 手动刷新列表
