@@ -5,7 +5,8 @@ metadata:
   labels:
     app: shopping-backend
 spec:
-  replicas: 2
+  replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: shopping-backend
@@ -14,10 +15,14 @@ spec:
       labels:
         app: shopping-backend
     spec:
+      terminationGracePeriodSeconds: 30
       containers:
         - name: shopping-backend
           image: shopping-backend:latest
           imagePullPolicy: IfNotPresent
+          env:
+            - name: GIN_MODE
+              value: release
           ports:
             - name: http
               containerPort: 8080
