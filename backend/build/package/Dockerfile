@@ -14,6 +14,8 @@ WORKDIR /app
 
 COPY --from=builder /out/server /app/server
 
+ENV GIN_MODE=release
+
 EXPOSE 8080
 
 USER nonroot:nonroot
