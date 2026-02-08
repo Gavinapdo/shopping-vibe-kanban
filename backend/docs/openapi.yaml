@@ -1,0 +1,187 @@
+openapi: 3.0.3
+info:
+  title: 商品管理系统 API
+  version: 1.0.0
+  description: 基于 Gin 的商品管理接口，数据存储在内存中。
+servers:
+  - url: http://localhost:8080
+paths:
+  /healthz:
+    get:
+      summary: 健康检查
+      responses:
+        '200':
+          description: 服务正常
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                required: [status]
+  /api/v1/products:
+    get:
+      summary: 查询商品列表
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+                required: [items]
+    post:
+      summary: 创建商品
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductPayload'
+      responses:
+        '201':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/products/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: 商品 ID，正整数
+        schema:
+          type: integer
+          minimum: 1
+          format: int64
+    get:
+      summary: 查询单个商品
+      responses:
+        '200':
+          description: 查询成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: 商品 ID 不合法
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: 商品不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      summary: 更新商品
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductPayload'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: 商品不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: 删除商品
+      responses:
+        '204':
+          description: 删除成功
+        '400':
+          description: 商品 ID 不合法
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: 商品不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: 无线鼠标
+        description:
+          type: string
+          example: 静音按键，支持蓝牙与2.4G
+        price:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+          example: 89
+        stock:
+          type: integer
+          minimum: 0
+          example: 120
+      required: [id, name, description, price, stock]
+    ProductPayload:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          example: 扩展坞
+        description:
+          type: string
+          example: Type-C 扩展坞
+        price:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+          example: 199
+        stock:
+          type: integer
+          minimum: 0
+          example: 30
+      required: [name, price, stock]
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: 商品参数不合法
+      required: [error]
