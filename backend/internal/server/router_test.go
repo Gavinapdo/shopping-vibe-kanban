@@ -50,7 +50,7 @@ func TestHealthz(t *testing.T) {
 
 func TestListProducts(t *testing.T) {
 	handler := buildTestRouter()
-	resp := performRequest(handler, http.MethodGet, "/api/v1/products", "")
+	resp := performRequest(handler, http.MethodGet, "/api/products", "")
 	if resp.Code != http.StatusOK {
 		t.Fatalf("期望状态码为200，实际为%d", resp.Code)
 	}
@@ -73,7 +73,7 @@ func TestListProducts(t *testing.T) {
 func TestGetProduct(t *testing.T) {
 	t.Run("查询成功", func(t *testing.T) {
 		handler := buildTestRouter()
-		resp := performRequest(handler, http.MethodGet, "/api/v1/products/1", "")
+		resp := performRequest(handler, http.MethodGet, "/api/products/1", "")
 		if resp.Code != http.StatusOK {
 			t.Fatalf("期望状态码为200，实际为%d", resp.Code)
 		}
@@ -90,7 +90,7 @@ func TestGetProduct(t *testing.T) {
 
 	t.Run("商品不存在", func(t *testing.T) {
 		handler := buildTestRouter()
-		resp := performRequest(handler, http.MethodGet, "/api/v1/products/999", "")
+		resp := performRequest(handler, http.MethodGet, "/api/products/999", "")
 		if resp.Code != http.StatusNotFound {
 			t.Fatalf("期望状态码为404，实际为%d", resp.Code)
 		}
@@ -98,7 +98,7 @@ func TestGetProduct(t *testing.T) {
 
 	t.Run("商品ID不合法", func(t *testing.T) {
 		handler := buildTestRouter()
-		resp := performRequest(handler, http.MethodGet, "/api/v1/products/abc", "")
+		resp := performRequest(handler, http.MethodGet, "/api/products/abc", "")
 		if resp.Code != http.StatusBadRequest {
 			t.Fatalf("期望状态码为400，实际为%d", resp.Code)
 		}
@@ -110,7 +110,7 @@ func TestCreateProduct(t *testing.T) {
 		handler := buildTestRouter()
 		createBody := `{"name":"扩展坞","description":"Type-C 扩展坞","price":199,"stock":30}`
 
-		createResp := performRequest(handler, http.MethodPost, "/api/v1/products", createBody)
+		createResp := performRequest(handler, http.MethodPost, "/api/products", createBody)
 		if createResp.Code != http.StatusCreated {
 			t.Fatalf("期望状态码为201，实际为%d", createResp.Code)
 		}
@@ -123,7 +123,7 @@ func TestCreateProduct(t *testing.T) {
 			t.Fatalf("期望新建商品ID为4，实际为%d", created.ID)
 		}
 
-		getResp := performRequest(handler, http.MethodGet, "/api/v1/products/4", "")
+		getResp := performRequest(handler, http.MethodGet, "/api/products/4", "")
 		if getResp.Code != http.StatusOK {
 			t.Fatalf("期望新建商品可查询，实际状态码为%d", getResp.Code)
 		}
@@ -131,7 +131,7 @@ func TestCreateProduct(t *testing.T) {
 
 	t.Run("请求体格式错误", func(t *testing.T) {
 		handler := buildTestRouter()
-		resp := performRequest(handler, http.MethodPost, "/api/v1/products", `{"name":`) // 非法JSON
+		resp := performRequest(handler, http.MethodPost, "/api/products", `{"name":`) // 非法JSON
 		if resp.Code != http.StatusBadRequest {
 			t.Fatalf("期望状态码为400，实际为%d", resp.Code)
 		}
@@ -139,7 +139,7 @@ func TestCreateProduct(t *testing.T) {
 
 	t.Run("业务参数不合法", func(t *testing.T) {
 		handler := buildTestRouter()
-		resp := performRequest(handler, http.MethodPost, "/api/v1/products", `{"name":" ","description":"","price":99,"stock":10}`)
+		resp := performRequest(handler, http.MethodPost, "/api/products", `{"name":" ","description":"","price":99,"stock":10}`)
 		if resp.Code != http.StatusBadRequest {
 			t.Fatalf("期望状态码为400，实际为%d", resp.Code)
 		}
@@ -151,7 +151,7 @@ func TestUpdateProduct(t *testing.T) {
 		handler := buildTestRouter()
 		updateBody := `{"name":"机械键盘Pro","description":"87键，RGB背光","price":399,"stock":80}`
 
-		resp := performRequest(handler, http.MethodPut, "/api/v1/products/2", updateBody)
+		resp := performRequest(handler, http.MethodPut, "/api/products/2", updateBody)
 		if resp.Code != http.StatusOK {
 			t.Fatalf("期望状态码为200，实际为%d", resp.Code)
 		}
@@ -170,7 +170,7 @@ func TestUpdateProduct(t *testing.T) {
 	t.Run("商品不存在", func(t *testing.T) {
 		handler := buildTestRouter()
 		updateBody := `{"name":"机械键盘Pro","description":"87键，RGB背光","price":399,"stock":80}`
-		resp := performRequest(handler, http.MethodPut, "/api/v1/products/999", updateBody)
+		resp := performRequest(handler, http.MethodPut, "/api/products/999", updateBody)
 		if resp.Code != http.StatusNotFound {
 			t.Fatalf("期望状态码为404，实际为%d", resp.Code)
 		}
@@ -179,7 +179,7 @@ func TestUpdateProduct(t *testing.T) {
 	t.Run("商品ID不合法", func(t *testing.T) {
 		handler := buildTestRouter()
 		updateBody := `{"name":"机械键盘Pro","description":"87键，RGB背光","price":399,"stock":80}`
-		resp := performRequest(handler, http.MethodPut, "/api/v1/products/0", updateBody)
+		resp := performRequest(handler, http.MethodPut, "/api/products/0", updateBody)
 		if resp.Code != http.StatusBadRequest {
 			t.Fatalf("期望状态码为400，实际为%d", resp.Code)
 		}
@@ -187,7 +187,7 @@ func TestUpdateProduct(t *testing.T) {
 
 	t.Run("请求体格式错误", func(t *testing.T) {
 		handler := buildTestRouter()
-		resp := performRequest(handler, http.MethodPut, "/api/v1/products/2", `{"name":`)
+		resp := performRequest(handler, http.MethodPut, "/api/products/2", `{"name":`)
 		if resp.Code != http.StatusBadRequest {
 			t.Fatalf("期望状态码为400，实际为%d", resp.Code)
 		}
@@ -195,7 +195,7 @@ func TestUpdateProduct(t *testing.T) {
 
 	t.Run("业务参数不合法", func(t *testing.T) {
 		handler := buildTestRouter()
-		resp := performRequest(handler, http.MethodPut, "/api/v1/products/2", `{"name":"键盘","description":"","price":0,"stock":1}`)
+		resp := performRequest(handler, http.MethodPut, "/api/products/2", `{"name":"键盘","description":"","price":0,"stock":1}`)
 		if resp.Code != http.StatusBadRequest {
 			t.Fatalf("期望状态码为400，实际为%d", resp.Code)
 		}
@@ -205,12 +205,12 @@ func TestUpdateProduct(t *testing.T) {
 func TestDeleteProduct(t *testing.T) {
 	t.Run("删除成功", func(t *testing.T) {
 		handler := buildTestRouter()
-		deleteResp := performRequest(handler, http.MethodDelete, "/api/v1/products/3", "")
+		deleteResp := performRequest(handler, http.MethodDelete, "/api/products/3", "")
 		if deleteResp.Code != http.StatusNoContent {
 			t.Fatalf("期望状态码为204，实际为%d", deleteResp.Code)
 		}
 
-		getResp := performRequest(handler, http.MethodGet, "/api/v1/products/3", "")
+		getResp := performRequest(handler, http.MethodGet, "/api/products/3", "")
 		if getResp.Code != http.StatusNotFound {
 			t.Fatalf("期望删除后状态码为404，实际为%d", getResp.Code)
 		}
@@ -218,7 +218,7 @@ func TestDeleteProduct(t *testing.T) {
 
 	t.Run("商品不存在", func(t *testing.T) {
 		handler := buildTestRouter()
-		resp := performRequest(handler, http.MethodDelete, "/api/v1/products/999", "")
+		resp := performRequest(handler, http.MethodDelete, "/api/products/999", "")
 		if resp.Code != http.StatusNotFound {
 			t.Fatalf("期望状态码为404，实际为%d", resp.Code)
 		}
@@ -226,7 +226,7 @@ func TestDeleteProduct(t *testing.T) {
 
 	t.Run("商品ID不合法", func(t *testing.T) {
 		handler := buildTestRouter()
-		resp := performRequest(handler, http.MethodDelete, "/api/v1/products/-1", "")
+		resp := performRequest(handler, http.MethodDelete, "/api/products/-1", "")
 		if resp.Code != http.StatusBadRequest {
 			t.Fatalf("期望状态码为400，实际为%d", resp.Code)
 		}
