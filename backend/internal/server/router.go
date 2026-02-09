@@ -20,7 +20,8 @@ func NewRouter() *gin.Engine {
 	service := product.NewService(repo)
 	handler := product.NewHandler(service)
 
-	api := router.Group("/api/v1")
+	// 路由组使用 /api，与前端请求路径保持一致
+	api := router.Group("/api")
 	handler.RegisterRoutes(api)
 
 	return router
